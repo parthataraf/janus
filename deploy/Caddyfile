@@ -1,0 +1,21 @@
+# Caddy reverse proxy with automatic HTTPS.
+#
+# {$DOMAIN} is taken from the environment:
+#   - Production:  DOMAIN=janus.example.com  -> Caddy provisions a Let's Encrypt
+#     certificate automatically and serves HTTPS (with an HTTP->HTTPS redirect).
+#   - Local test:  DOMAIN=http://localhost   -> the http:// scheme tells Caddy to
+#     serve plain HTTP on :80 with no TLS, so you can hit http://localhost.
+#
+# One origin for the browser: /api/* is stripped and proxied to the api service;
+# everything else is the static frontend.
+{$DOMAIN} {
+	encode gzip
+
+	handle_path /api/* {
+		reverse_proxy api:8000
+	}
+
+	handle {
+		reverse_proxy frontend:80
+	}
+}

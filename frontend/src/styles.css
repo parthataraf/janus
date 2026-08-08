@@ -1,0 +1,437 @@
+/* ---- Design tokens (see design/): dark default + light ---- */
+:root,
+:root[data-theme="dark"] {
+  --bg: #0b0d11;
+  --surface: #10141a;
+  --surface2: #161b23;
+  --card: #1a202b;
+  --panel: #0d1015;
+  --code-bg: #0d1015;
+  --border: #20262f;
+  --border2: #2c3542;
+  --text: #e3e7ee;
+  --muted: #8a93a4;
+  --faint: #5c6575;
+  --accent: #2dd4bf;
+  --accent-dim: #0d9488;
+  --kw: #93b8e8;
+  --str: #c9a97e;
+  --num: #d2b48c;
+  --com: #5c6575;
+  --error: #ff8a80;
+  --error-bg: #2a1215;
+  --error-border: #5c2b2e;
+  --sent-hl: rgba(45, 212, 191, 0.14);
+  --shadow: rgba(0, 0, 0, 0.4);
+}
+:root[data-theme="light"] {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --surface2: #eef0f4;
+  --card: #ffffff;
+  --panel: #eef1f5;
+  --code-bg: #f2f4f7;
+  --border: #e2e6ec;
+  --border2: #d2d8e1;
+  --text: #1b222e;
+  --muted: #5c6575;
+  --faint: #97a0af;
+  --accent: #0d9488;
+  --accent-dim: #2dd4bf;
+  --kw: #2f6bb0;
+  --str: #96662a;
+  --num: #8a5a20;
+  --com: #97a0af;
+  --error: #c0392b;
+  --error-bg: #fdecea;
+  --error-border: #f5c6cb;
+  --sent-hl: rgba(13, 148, 136, 0.12);
+  --shadow: rgba(15, 22, 30, 0.1);
+}
+
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+button { font-family: inherit; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ---- Layout ---- */
+.app { display: flex; flex-direction: column; height: 100%; }
+.main {
+  flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) 384px;
+  overflow: hidden;
+}
+@media (max-width: 860px) { .main { grid-template-columns: 1fr; } .panel { display: none; } }
+
+/* ---- Header ---- */
+.header {
+  height: 56px; flex: 0 0 56px; display: flex; align-items: center;
+  justify-content: space-between; padding: 0 20px;
+  border-bottom: 1px solid var(--border); background: var(--surface);
+}
+.header-left { display: flex; align-items: center; gap: 10px; }
+/* The brand is a button (second route to Home), so strip the button chrome and
+   keep it looking exactly like the static lockup it replaces. */
+.brand {
+  display: flex; align-items: center; gap: 10px; font-weight: 700;
+  letter-spacing: -0.01em; background: none; border: 0; padding: 0;
+  color: inherit; font: inherit; text-align: left; cursor: pointer;
+}
+.brand:hover .brand-name { color: var(--accent); }
+.brand .mark { width: 20px; height: 20px; color: var(--accent); }
+.header-right { display: flex; align-items: center; gap: 10px; }
+.select {
+  background: var(--surface2); color: var(--text); border: 1px solid var(--border);
+  border-radius: 8px; padding: 6px 10px; font-size: 13px;
+}
+.sep { width: 1px; height: 20px; background: var(--border); }
+/* Metadata, not a control: no border, no background, no hover, default
+   cursor. Mono to match how the footer renders the same value. */
+.patch-badge {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 11.5px; color: var(--muted); white-space: nowrap;
+  cursor: default; user-select: text;
+}
+.icon-btn {
+  background: var(--surface2); color: var(--muted); border: 1px solid var(--border);
+  border-radius: 8px; width: 34px; height: 32px; cursor: pointer; font-size: 15px;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.icon-btn:hover { color: var(--text); border-color: var(--border2); }
+
+/* Icon + word. Used by Home and by the "button" theme treatment: obviously
+   interactive (border, hover, pointer) without the visual weight of a filled
+   control, so neither competes with the brand or the corpus switcher. */
+.btn-labeled {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: var(--surface2); color: var(--muted);
+  border: 1px solid var(--border); border-radius: 8px;
+  height: 32px; padding: 0 11px; font-size: 13px; font-family: inherit;
+  cursor: pointer; white-space: nowrap;
+  transition: color 0.12s ease, border-color 0.12s ease;
+}
+.btn-labeled:hover { color: var(--text); border-color: var(--border2); }
+.btn-labeled:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn-label { font-weight: 500; }
+
+/* Segmented: both modes named, the live one filled. Shows state AND options,
+   so neither reading needs a tooltip to disambiguate. */
+.theme-seg {
+  display: inline-flex; background: var(--surface2);
+  border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+}
+.theme-seg button {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: none; border: 0; color: var(--muted); font-family: inherit;
+  font-size: 12.5px; height: 30px; padding: 0 10px; cursor: pointer;
+  white-space: nowrap; transition: color 0.12s ease, background 0.12s ease;
+}
+.theme-seg button:hover { color: var(--text); }
+.theme-seg button.on { background: var(--card); color: var(--text); }
+.theme-seg button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+/* ---- Header at narrow widths ------------------------------------------- *
+   Four things now share the row (Home, brand lockup, patch badge, corpus
+   switcher, theme control). They shed in order of how much each earns its
+   space, so the controls survive longest and nothing wraps. */
+@media (max-width: 900px) {
+  /* The tagline is the least load-bearing thing in the header. */
+  .brand-sub { display: none; }
+}
+@media (max-width: 700px) {
+  .header { padding: 0 12px; }
+  .header-left, .header-right { gap: 7px; }
+  /* "Patch" is implied by the version number next to a game name. */
+  .patch-badge .patch-word { display: none; }
+}
+@media (max-width: 560px) {
+  /* Words go, icons stay: by this width the positions are the only
+     affordance left, and both sit where the eye already looks. */
+  .btn-label, .seg-label { display: none; }
+  .btn-labeled { padding: 0 9px; }
+  .theme-seg button { padding: 0 9px; gap: 0; }
+}
+@media (max-width: 420px) {
+  /* Last to go: the brand word (the mark still identifies the site) and the
+     patch badge, which is repeated in the footer. */
+  .brand-text { display: none; }
+  .patch-badge { display: none; }
+}
+
+/* Condensed grounding line. Pinned under the header for the whole session so
+   the AI-generated + grounded + cited claim never scrolls away with the hero.
+   Furniture, not feedback: it must not animate or redraw while tokens stream. */
+.grounding {
+  flex: 0 0 auto;
+  display: flex; align-items: center; gap: 11px;
+  padding: 15px 32px;
+  /* 15px, matching the answer body exactly and stopping there. Once the hero
+     collapses this is the only persistent framing on screen, so it has to be
+     read rather than skimmed — but the answer is the reason the page exists,
+     and type larger than 15px here would put furniture above content in the
+     hierarchy. The presence comes from colour, weight and space instead. */
+  font-size: 15px; line-height: 1.5;
+  color: var(--text);
+  /* A tinted band rather than plain surface: enough separation from the header
+     above and the answer below to read as its own object, far too little
+     saturation to read as an alert. */
+  background: var(--surface);
+  background: color-mix(in srgb, var(--accent) 7%, var(--surface));
+  border-bottom: 1px solid var(--border);
+  border-bottom-color: color-mix(in srgb, var(--accent) 22%, var(--border));
+  /* The rule ties the band to the accent without adding another coloured
+     word to a line that already has one. */
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+.grounding-glyph { color: var(--accent); font-size: 15px; }
+/* The phrase the eye should land on. */
+.grounding-key { color: var(--accent); font-weight: 600; }
+.nowrap { white-space: nowrap; }
+@media (max-width: 640px) {
+  .grounding { padding: 12px 16px; font-size: 14px; gap: 9px; }
+  .grounding-glyph { font-size: 14px; }
+}
+
+/* ---- Chat column ---- */
+.chat { display: flex; flex-direction: column; overflow: hidden; }
+.messages { flex: 1; overflow-y: auto; padding: 28px 32px 8px; }
+.messages-inner { max-width: 760px; margin: 0 auto; }
+
+/* Empty / first-visit hero */
+.hero {
+  height: 100%; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; text-align: center; gap: 18px; padding-bottom: 40px;
+}
+.hero .mark { width: 52px; height: 52px; color: var(--accent); }
+.hero h1 {
+  margin: 0; font-size: 30px; font-weight: 700; letter-spacing: -0.025em;
+  max-width: 680px; line-height: 1.2;
+}
+/* Sits tight under the title as one lockup, then the paragraph breathes below. */
+.hero .subtitle {
+  margin: -8px 0 0; font-size: 15px; color: var(--muted); max-width: 520px;
+}
+.hero .subtitle .accent { color: var(--accent); font-weight: 600; }
+.hero p { margin: 0; color: var(--muted); max-width: 520px; line-height: 1.6; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; max-width: 560px; }
+.chip {
+  background: var(--surface2); color: var(--text); border: 1px solid var(--border);
+  border-radius: 999px; padding: 7px 14px; font-size: 13px; cursor: pointer;
+}
+.chip:hover { border-color: var(--accent); color: var(--accent); }
+.hero .chips .chip { padding: 9px 16px; font-size: 14px; }
+
+/* Message + answer */
+.qa { margin-bottom: 30px; }
+.question { display: flex; gap: 10px; align-items: baseline; margin-bottom: 12px; }
+.question .who { color: var(--accent); font-weight: 700; }
+.question .text { font-weight: 600; font-size: 16px; }
+.answer { color: var(--text); }
+.answer p { margin: 0 0 12px; }
+.answer ul, .answer ol { margin: 0 0 12px; padding-left: 22px; }
+.answer li { margin: 4px 0; }
+.answer h1, .answer h2, .answer h3 { font-size: 16px; margin: 16px 0 8px; }
+.answer pre {
+  background: var(--code-bg); border: 1px solid var(--border); border-radius: 10px;
+  padding: 14px 16px; overflow-x: auto; margin: 0 0 14px;
+}
+.answer :not(pre) > code {
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 5px;
+  padding: 1px 5px; font-size: 0.88em;
+}
+.answer code, .answer pre { font-family: "JetBrains Mono", ui-monospace, monospace; }
+.answer pre code { font-size: 13px; line-height: 1.55; }
+
+/* citation markers + sentence highlight */
+.cite {
+  background: none; border: none; padding: 0 1px; cursor: pointer;
+  color: var(--accent); font-weight: 600; font-size: 0.9em; vertical-align: baseline;
+}
+.cite:hover { text-decoration: underline; }
+.sent { border-radius: 4px; transition: opacity 0.18s ease, background 0.18s ease; }
+.answer[data-hl] .sent { opacity: 0.36; }
+.answer[data-hl="1"] .sent.cites-1,
+.answer[data-hl="2"] .sent.cites-2,
+.answer[data-hl="3"] .sent.cites-3,
+.answer[data-hl="4"] .sent.cites-4,
+.answer[data-hl="5"] .sent.cites-5,
+.answer[data-hl="6"] .sent.cites-6,
+.answer[data-hl="7"] .sent.cites-7,
+.answer[data-hl="8"] .sent.cites-8 {
+  opacity: 1; background: var(--sent-hl); box-shadow: 0 0 0 3px var(--sent-hl);
+}
+
+/* streaming: shimmer then caret */
+.shimmer { display: flex; flex-direction: column; gap: 8px; }
+.shimmer span {
+  height: 12px; border-radius: 6px;
+  background: linear-gradient(90deg, var(--surface2) 25%, var(--border) 37%, var(--surface2) 63%);
+  background-size: 400% 100%; animation: shimmer 1.4s ease infinite;
+}
+.shimmer span:nth-child(1) { width: 92%; }
+.shimmer span:nth-child(2) { width: 78%; }
+.shimmer span:nth-child(3) { width: 85%; }
+@keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
+.caret {
+  display: inline-block; width: 7px; height: 1.05em; margin-left: 1px;
+  background: var(--accent); vertical-align: text-bottom; animation: blink 1s step-end infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+/* latency readout — collapsed to a muted total; full stage breakdown on
+   hover (title) or click (toggles the inline breakdown). */
+.latency {
+  margin-top: 6px; color: var(--faint); font-size: 12px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;
+}
+.latency-total {
+  background: none; border: none; padding: 0; font: inherit;
+  color: var(--faint); cursor: pointer; border-bottom: 1px dotted var(--border);
+}
+.latency-total:hover { color: var(--muted); }
+.latency-breakdown { color: var(--faint); }
+
+/* refusal card in the answer area */
+.refusal-card {
+  border: 1.5px dashed var(--error-border); background: var(--error-bg);
+  border-radius: 12px; padding: 16px 18px; color: var(--text);
+}
+.refusal-card .title { color: var(--error); font-weight: 600; margin-bottom: 6px; }
+.refusal-card .score { color: var(--muted); font-size: 13px; margin-top: 8px;
+  font-family: "JetBrains Mono", ui-monospace, monospace; }
+
+/* ---- Composer ---- */
+.composer { flex: 0 0 auto; border-top: 1px solid var(--border); background: var(--surface); padding: 14px 32px 18px; }
+.composer-inner { max-width: 760px; margin: 0 auto; display: flex; gap: 10px; }
+.composer textarea {
+  flex: 1; resize: none; background: var(--surface2); color: var(--text);
+  border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px;
+  font-family: inherit; font-size: 15px; line-height: 1.4; max-height: 160px;
+}
+.composer textarea:focus { outline: none; border-color: var(--accent); }
+.send {
+  align-self: flex-end; background: var(--accent); color: #08201d; border: none;
+  border-radius: 12px; padding: 0 18px; height: 44px; font-weight: 600; cursor: pointer;
+}
+.send:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ---- Sources panel ---- */
+.panel { border-left: 1px solid var(--border); background: var(--panel); overflow-y: auto; }
+.panel-head {
+  position: sticky; top: 0; background: var(--panel); border-bottom: 1px solid var(--border);
+  padding: 14px 18px; font-size: 13px; z-index: 2;
+}
+.panel-head .who { color: var(--accent); font-weight: 700; }
+.panel-head .qtext { color: var(--muted); }
+.panel-body { padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+
+.source-card {
+  border: 1px solid var(--border); background: var(--card); border-radius: 12px;
+  padding: 12px 13px; scroll-margin: 14px;
+}
+.source-card .top { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+.source-card .idx {
+  flex: 0 0 auto; width: 22px; height: 22px; border-radius: 6px; font-size: 12px; font-weight: 700;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--surface2); color: var(--accent); border: 1px solid var(--border);
+}
+.score { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.score .bar { width: 84px; height: 5px; border-radius: 3px; background: var(--surface2); overflow: hidden; border: 1px solid var(--border); }
+.score .fill { height: 100%; background: var(--accent); }
+.score .num { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11px; color: var(--muted); min-width: 44px; text-align: right; }
+.source-card .heading { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 11.5px; color: var(--muted); margin-bottom: 7px; word-break: break-word; }
+.source-card .preview { font-size: 12.5px; color: var(--text); opacity: 0.86; max-height: 66px; overflow: hidden; }
+.source-card .link { display: inline-block; margin-top: 8px; font-size: 12px; }
+
+/* double glow pulse when a [n] is clicked */
+.source-card.pulse { animation: glowpulse 1.05s ease; }
+@keyframes glowpulse {
+  0% { box-shadow: 0 0 0 0 transparent; border-color: var(--border); }
+  15% { box-shadow: 0 0 0 3px var(--accent); border-color: var(--accent); }
+  40% { box-shadow: 0 0 0 0 transparent; border-color: var(--border); }
+  60% { box-shadow: 0 0 0 3px var(--accent); border-color: var(--accent); }
+  100% { box-shadow: 0 0 0 0 transparent; border-color: var(--border); }
+}
+
+/* empty dashed slots */
+.slot {
+  border: 1.5px dashed var(--border2); border-radius: 12px; padding: 16px 13px;
+  color: var(--faint); display: flex; align-items: center; gap: 10px; font-size: 13px;
+}
+.slot .idx {
+  width: 22px; height: 22px; border-radius: 6px; font-size: 12px; font-weight: 700;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px dashed var(--border2); color: var(--faint);
+}
+.refusal-slot { border-color: var(--error-border); }
+
+/* ---- highlight.js token colors mapped to design vars ---- */
+.hljs { color: var(--text); background: transparent; }
+.hljs-keyword, .hljs-built_in, .hljs-type, .hljs-literal { color: var(--kw); }
+.hljs-string, .hljs-meta .hljs-string { color: var(--str); }
+.hljs-number { color: var(--num); }
+.hljs-comment, .hljs-quote { color: var(--com); font-style: italic; }
+.hljs-title, .hljs-title.function_, .hljs-function .hljs-title { color: var(--accent); }
+.hljs-params { color: var(--text); }
+.hljs-attr, .hljs-property { color: var(--kw); }
+.hljs-meta { color: var(--faint); }
+
+/* Live-stats (OP.GG) source card — visually distinct from doc/structured cards. */
+.source-card.live {
+  border-color: var(--accent);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+/* Citation-weight, not brand-weight: quiet muted badge, small accent "live"
+   dot retained as the only colored signal. */
+.live-badge {
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+}
+.live-badge .live-dot { color: var(--accent); }
+.source-card.live .link.quiet { color: var(--muted); font-size: 11px; }
+.source-card.live .link.quiet:hover { color: var(--accent); }
+/* Provenance/freshness sits under a preview that clips mid-line, so it needs
+   its own breathing room or it reads as part of the truncated text. */
+.source-card .freshness {
+  margin-top: 9px; padding-top: 7px;
+  border-top: 1px solid var(--border);
+  font-family: var(--mono, ui-monospace, monospace);
+  font-size: 11px;
+  color: var(--muted);
+}
+.refusal-card.warming { border-color: var(--accent); }
+.refusal-card.warming .title { color: var(--accent); }
+
+/* Header subtitle (design delta) */
+.brand-text { display: flex; flex-direction: column; line-height: 1.12; }
+.brand-name { font-weight: 700; }
+.brand-sub { font-size: 11px; font-weight: 500; color: var(--muted); letter-spacing: 0; }
+
+/* Lifted surfaces — subtle base elevation on cards + composer (design delta) */
+.source-card { box-shadow: 0 1px 2px var(--shadow); }
+.source-card.live { box-shadow: inset 3px 0 0 var(--accent), 0 1px 2px var(--shadow); }
+.composer { box-shadow: 0 -2px 8px var(--shadow); }
+
+/* Footer: data freshness + GitHub (design delta) */
+.footer {
+  flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 20px; border-top: 1px solid var(--border); background: var(--surface);
+  font-size: 11.5px; color: var(--muted);
+}
+.footer .fresh { font-family: "JetBrains Mono", ui-monospace, monospace; }
+.footer a { color: var(--muted); }
+.footer a:hover { color: var(--accent); }
+
+/* Footer: technical links grouped at the right, quiet by default. */
+.footer-links { display: inline-flex; align-items: center; gap: 16px; }

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Get All Your League of Legends Answers | Janus</title>
+    <meta
+      name="description"
+      content="Ask anything about League of Legends: champions, abilities, items, matchups, builds. AI answers from Riot's data and live match stats, every claim cited."
+    />
+    <!-- Favicon: the Janus mark (two-faced teal disc), inlined so there's no extra request. -->
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='10' fill='none' stroke='%232dd4bf' stroke-width='2'/%3E%3Cpath d='M12 2 A10 10 0 0 0 12 22 Z' fill='%232dd4bf'/%3E%3C/svg%3E"
+    />
+    <!-- Open Graph / Twitter so a shared link unfurls with a preview card.
+         The preview image is served from THIS origin (frontend/public/janus-lol.png,
+         which Vite copies to the dist root) rather than raw.githubusercontent.com, so
+         the unfurl doesn't depend on the repo staying public. If you move the image,
+         move the file too — scrapers need an absolute, publicly-fetchable URL. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Get All Your League of Legends Answers | Janus" />
+    <meta property="og:description" content="Ask anything about League of Legends. AI answers from Riot's official game data and live match stats, with every claim linked to its source." />
+    <meta property="og:url" content="https://leagueoflegends.polaris-ai.org" />
+    <meta property="og:image" content="https://leagueoflegends.polaris-ai.org/janus-lol.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Get All Your League of Legends Answers | Janus" />
+    <meta name="twitter:description" content="Ask anything about League of Legends. AI answers from Riot's official game data and live match stats, with every claim linked to its source." />
+    <meta name="twitter:image" content="https://leagueoflegends.polaris-ai.org/janus-lol.png" />
+
+    <!-- Fonts (fall back to system-ui / ui-monospace offline; see styles.css vars). -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      // Set theme before paint to avoid a flash.
+      // Dark is the DEFAULT for everyone: the design is built dark-first and
+      // that is the intended first impression. We deliberately ignore
+      // prefers-color-scheme — it used to decide the default, so anyone whose OS
+      // was set to light saw a page nobody had art-directed. The OS setting is a
+      // preference about the OS, not about this site; only an explicit click on
+      // the toggle (persisted here) overrides the default.
+      (function () {
+        var t = localStorage.getItem("janus-theme");
+        document.documentElement.setAttribute("data-theme", t === "light" ? "light" : "dark");
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

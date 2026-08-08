@@ -1,0 +1,60 @@
+# testset_fastapi.jsonl — hand-curated eval set (double-reviewed), 54 questions.
+# Assistant-drafted, independently re-reviewed via retrieval, then owner-curated
+# (verdicts applied 2026-07-18). Schema: {question, expected_urls, type} with type
+# in howto|concept|api|off_corpus; off_corpus has empty expected_urls. Paired
+# conceptual/code-seeking questions share a pair_id. These #-comment lines are not
+# valid JSON and must be skipped by the eval loader.
+{"question": "What is dependency injection in FastAPI and why would I use Depends?", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/dependencies/"], "type": "concept", "topic": "dependency-injection", "pair_id": "dependency-injection"}
+{"question": "Show me the code to inject a shared dependency into a path operation with Depends.", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/dependencies/"], "type": "howto", "topic": "dependency-injection", "pair_id": "dependency-injection"}
+{"question": "What does the response_model parameter actually do to my endpoint's output?", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/response-model/"], "type": "concept", "topic": "response-model", "pair_id": "response-model"}
+{"question": "Show me the code to declare a response_model on a path operation.", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/response-model/"], "type": "howto", "topic": "response-model", "pair_id": "response-model"}
+{"question": "What are background tasks and when should I use them instead of a real queue?", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/background-tasks/"], "type": "concept", "topic": "background-tasks", "pair_id": "background-tasks"}
+{"question": "Show me the code to run a background task after sending the response.", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/background-tasks/", "https://fastapi.tiangolo.com/reference/background/"], "type": "howto", "topic": "background-tasks", "pair_id": "background-tasks"}
+{"question": "What is middleware in FastAPI and what can it intercept?", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/middleware/"], "type": "concept", "topic": "middleware", "pair_id": "middleware"}
+{"question": "Show me the code to write a custom middleware that times each request.", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/middleware/"], "type": "howto", "topic": "middleware", "pair_id": "middleware"}
+{"question": "How do WebSockets work in FastAPI compared to normal HTTP routes?", "expected_urls": ["https://fastapi.tiangolo.com/advanced/websockets/"], "type": "concept", "topic": "websockets", "pair_id": "websockets"}
+{"question": "Show me the code to accept a WebSocket connection and echo messages back.", "expected_urls": ["https://fastapi.tiangolo.com/advanced/websockets/"], "type": "howto", "topic": "websockets", "pair_id": "websockets"}
+{"question": "What is the OAuth2 password flow and how does FastAPI model it?", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/security/simple-oauth2/", "https://fastapi.tiangolo.com/tutorial/security/first-steps/"], "type": "concept", "topic": "oauth2-password", "pair_id": "oauth2-password"}
+{"question": "Show me the code to implement OAuth2 password login that returns a token.", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/security/simple-oauth2/"], "type": "howto", "topic": "oauth2-password", "pair_id": "oauth2-password"}
+{"question": "What is CORS and why do browser requests to my API get blocked without it?", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/cors/"], "type": "concept", "topic": "cors", "pair_id": "cors"}
+{"question": "Show me the code to enable CORS for my frontend origin.", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/cors/"], "type": "howto", "topic": "cors", "pair_id": "cors"}
+{"question": "What is an APIRouter and how does it help structure a bigger application?", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/bigger-applications/", "https://fastapi.tiangolo.com/reference/apirouter/"], "type": "concept", "topic": "routers", "pair_id": "routers"}
+{"question": "Show me the code to split routes into a router file and include it in the app.", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/bigger-applications/"], "type": "howto", "topic": "routers", "pair_id": "routers"}
+{"question": "What's the difference between a path parameter and a query parameter?", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/path-params/", "https://fastapi.tiangolo.com/tutorial/query-params/"], "type": "concept", "topic": "params"}
+{"question": "What is a sub-dependency and when would I reach for one?", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/dependencies/sub-dependencies/"], "type": "concept", "topic": "dependencies"}
+{"question": "Why would I use a dependency with yield instead of a plain one?", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/dependencies/dependencies-with-yield/"], "type": "concept", "topic": "dependencies"}
+{"question": "How do I require a logged-in user on an endpoint with OAuth2?", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/security/get-current-user/"], "type": "howto", "topic": "security"}
+{"question": "How do I implement authentication with JWT tokens?", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/"], "type": "howto", "topic": "security"}
+{"question": "How do I get the current logged-in user inside a route?", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/security/get-current-user/"], "type": "howto", "topic": "security"}
+{"question": "How do I add HTTP Basic Auth to my API?", "expected_urls": ["https://fastapi.tiangolo.com/advanced/security/http-basic-auth/"], "type": "howto", "topic": "security"}
+{"question": "How do I set up OAuth2 scopes for fine-grained permissions?", "expected_urls": ["https://fastapi.tiangolo.com/advanced/security/oauth2-scopes/"], "type": "howto", "topic": "security"}
+{"question": "How do I write tests for my endpoints with TestClient?", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/testing/"], "type": "howto", "topic": "testing"}
+{"question": "How do I override a dependency in my tests?", "expected_urls": ["https://fastapi.tiangolo.com/advanced/testing-dependencies/"], "type": "howto", "topic": "testing"}
+{"question": "How do I test a WebSocket endpoint?", "expected_urls": ["https://fastapi.tiangolo.com/advanced/testing-websockets/"], "type": "howto", "topic": "testing"}
+{"question": "How do I accept file uploads in an endpoint?", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/request-files/"], "type": "howto", "topic": "uploads"}
+{"question": "How do I receive a form field and a file in the same request?", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/request-forms-and-files/"], "type": "howto", "topic": "uploads"}
+{"question": "How do I handle form-encoded POST data?", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/request-forms/"], "type": "howto", "topic": "uploads"}
+{"question": "How do I return a custom error response with a specific status code?", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/handling-errors/", "https://fastapi.tiangolo.com/tutorial/response-status-code/"], "type": "howto", "topic": "error-handling"}
+{"question": "How do I register a custom exception handler?", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/handling-errors/"], "type": "howto", "topic": "error-handling"}
+{"question": "How do I serve static files like images, CSS, and JS?", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/static-files/"], "type": "howto", "topic": "static-files"}
+{"question": "How do I manage configuration with environment variables and a settings object?", "expected_urls": ["https://fastapi.tiangolo.com/advanced/settings/"], "type": "howto", "topic": "settings"}
+{"question": "How do I stop unset fields from showing up in my JSON response?", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/response-model/"], "type": "howto", "topic": "response-models"}
+{"question": "How do I add a custom header to every response?", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/middleware/"], "type": "howto", "topic": "middleware"}
+{"question": "How do I organize my app into multiple route files?", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/bigger-applications/"], "type": "howto", "topic": "routers"}
+{"question": "How do I add a shared prefix and tags to a group of routes?", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/bigger-applications/", "https://fastapi.tiangolo.com/reference/apirouter/"], "type": "howto", "topic": "routers"}
+{"question": "How do I add query parameters to a path operation?", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/query-params/"], "type": "howto", "topic": "query-params"}
+{"question": "How do I make a query parameter required with validation?", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/query-params-str-validations/"], "type": "howto", "topic": "query-params"}
+{"question": "How do I add numeric validation to a path parameter?", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/path-params-numeric-validations/"], "type": "howto", "topic": "path-params"}
+{"question": "How do I run some work after the response is already sent?", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/background-tasks/"], "type": "howto", "topic": "background-tasks"}
+{"question": "How do I accept and receive messages over a WebSocket connection?", "expected_urls": ["https://fastapi.tiangolo.com/advanced/websockets/"], "type": "howto", "topic": "websockets"}
+{"question": "response_model — what is it for and how do I set it?", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/response-model/"], "type": "api", "topic": "response-models"}
+{"question": "HTTPException — how do I raise one with a custom status code and detail?", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/handling-errors/"], "type": "api", "topic": "error-handling"}
+{"question": "BackgroundTasks — how do I add one to a path operation?", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/background-tasks/", "https://fastapi.tiangolo.com/reference/background/"], "type": "api", "topic": "background-tasks"}
+{"question": "APIRouter — how do I create one and include it in the main app?", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/bigger-applications/", "https://fastapi.tiangolo.com/reference/apirouter/"], "type": "api", "topic": "routers"}
+{"question": "Depends with a class — how do I use a class as a dependency?", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/dependencies/classes-as-dependencies/"], "type": "api", "topic": "dependencies"}
+{"question": "UploadFile — how do I read the contents of an uploaded file?", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/request-files/", "https://fastapi.tiangolo.com/reference/uploadfile/"], "type": "api", "topic": "uploads"}
+{"question": "CORSMiddleware — how do I configure allowed origins?", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/cors/"], "type": "api", "topic": "cors"}
+{"question": "OAuth2PasswordBearer — how do I wire it up as a dependency?", "expected_urls": ["https://fastapi.tiangolo.com/tutorial/security/first-steps/", "https://fastapi.tiangolo.com/tutorial/security/simple-oauth2/"], "type": "api", "topic": "security"}
+{"question": "How do I bake chocolate chip cookies?", "expected_urls": [], "type": "off_corpus", "topic": "off-corpus"}
+{"question": "How do I center a div in CSS?", "expected_urls": [], "type": "off_corpus", "topic": "off-corpus"}
+{"question": "How do I train a neural network in PyTorch?", "expected_urls": [], "type": "off_corpus", "topic": "off-corpus"}

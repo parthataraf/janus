@@ -1,0 +1,11 @@
+# testset_lol_live.jsonl — behavior-scored live-stats (OP.GG) questions (Phase 4h).
+# These are NOT value-pinned: live numbers change per patch. Each is scored on
+# BEHAVIOR — routed to the live path, MCP called, attribution + timestamp present,
+# numbers present, hedging respected — plus one off-corpus that must still refuse
+# and one forced-degradation check (see eval/eval_live.py). Owner double-reviewed.
+{"question": "Who counters Yasuo?", "type": "matchup", "expect_live": "counters"}
+{"question": "What champions beat Zed in mid?", "type": "matchup", "expect_live": "counters"}
+{"question": "What's Jinx's win rate?", "type": "popularity", "expect_live": "champion_stats"}
+{"question": "Is Zed strong right now?", "type": "popularity", "expect_live": "champion_stats"}
+{"question": "Is Garen good for beginners?", "type": "beginner", "expect_live": "champion_stats"}
+{"question": "Which Yasuo skin is best?", "type": "off_corpus", "expect_live": null}

@@ -1,0 +1,35 @@
+# Secrets — real env files (any .env.*), but keep the committed examples.
+.env
+.env.*
+!.env.example
+!.env.deploy.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# Models / caches
+.cache/
+sentence_transformers_cache/
+
+# Node / frontend (later phases)
+node_modules/
+frontend/dist/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# FastAPI docs are cloned to an OS temp dir during ingestion (tempfile) and
+# auto-deleted — never in-repo. Defensive: ignore any local checkout/data if
+# one is ever created inside the project.
+/fastapi/
+/fastapi-docs/
+/data/
+*.tmp

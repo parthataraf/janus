@@ -1,0 +1,65 @@
+# Janus API image. CPU-only, non-root, with the RERANKER baked in at build time
+# so a query never triggers a cold model download.
+#
+# Embeddings are NOT baked: since the 2026-07-27 adoption of
+# openai/text-embedding-3-small they are served by the OpenAI-compatible API
+# (EMBED_PROVIDER=api), so no embedding weights ship in the image. The
+# cross-encoder reranker is still local and still baked. Anyone running
+# EMBED_PROVIDER=local must add their embedding model to the bake below, or
+# accept a one-time download on first query.
+#
+# Secrets are NEVER in the image: the OpenAI-compatible generation credentials
+# (OPENAI_BASE_URL / GEN_MODEL / OPENAI_API_KEY) and DATABASE_URL arrive only as
+# runtime environment from the server's .env (see docker-compose.deploy.yml).
+#
+# Layer order is deliberate: deps and the (large) model bake come BEFORE the app
+# code, so editing code rebuilds only the cheap COPY layers, never re-downloading
+# torch or the weights.
+FROM python:3.12-slim
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1
+
+# git: ingestion shallow-clones the docs repo. curl: container healthcheck.
+# libpq comes bundled with psycopg[binary].
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends git curl \
+ && rm -rf /var/lib/apt/lists/*
+
+# Non-root runtime user; its home holds the model cache.
+RUN useradd --create-home --uid 10001 appuser
+
+WORKDIR /app
+
+# CPU-only torch first (from the CPU wheel index) so sentence-transformers does
+# not pull the multi-GB CUDA build. Then the rest of the deps.
+# Pinned for the same reason as requirements.txt: unpinned, a rebuild months from
+# now silently swaps the tensor library underneath the reranker.
+RUN pip install --index-url https://download.pytorch.org/whl/cpu torch==2.13.0
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+# Model cache in the appuser home. Name matches core/config.py's default; it is
+# also set at runtime by compose.
+ENV RERANK_MODEL=cross-encoder/ms-marco-MiniLM-L-6-v2 \
+    HF_HOME=/home/appuser/.cache/huggingface \
+    SENTENCE_TRANSFORMERS_HOME=/home/appuser/.cache/sentence_transformers
+
+# Bake the reranker weights into the image (imports sentence_transformers
+# directly, so no DATABASE_URL is needed at build time). Done before COPYing app
+# code so a code change never re-downloads the model.
+RUN python -c "import os; from sentence_transformers import CrossEncoder; \
+CrossEncoder(os.environ['RERANK_MODEL'])" \
+ && chown -R appuser:appuser /home/appuser
+
+# Application code last.
+COPY core/ core/
+COPY app/ app/
+COPY ingestion/ ingestion/
+COPY smoke_test.py .
+RUN chown -R appuser:appuser /app
+
+USER appuser
+EXPOSE 8000
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

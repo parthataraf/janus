@@ -1,0 +1,26 @@
+# Dev datastore only. Phase 3 introduces docker-compose.deploy.yml which
+# overlays the api + frontend + reverse-proxy on top of this db service.
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: docpilot_db
+    environment:
+      POSTGRES_USER: rag
+      POSTGRES_PASSWORD: ragpass
+      POSTGRES_DB: ragdb
+    # Host port 5433 (not 5432) to avoid colliding with a local Postgres
+    # install that may already own 5432. Container still listens on 5432.
+    ports:
+      - "5433:5432"
+    volumes:
+      - docpilot_pgdata:/var/lib/postgresql/data
+    # Let dependent tooling wait until Postgres is actually accepting queries,
+    # not just until the container is up.
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rag -d ragdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  docpilot_pgdata:

@@ -1,0 +1,97 @@
+# Full production stack: Postgres (pgvector) + API + frontend + Caddy (auto TLS).
+#
+#   docker compose -f docker-compose.deploy.yml up -d --build
+#
+# One-off ingestion (populate this stack's own DB) — run once after first `up`.
+# The live product is the League of Legends face (LoL only):
+#   docker compose -f docker-compose.deploy.yml run --rm api \
+#       python -m ingestion.run_ingest --corpus lol
+#
+# All configuration comes from a sibling .env (see .env.deploy.example). Secrets
+# (OPENAI_API_KEY, Postgres password) are injected at runtime only — never baked
+# into an image. Only Caddy publishes ports; db/api/frontend stay on the internal
+# network and are reachable only through the proxy.
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # DATABASE_URL is derived from the Postgres vars so there's one source of
+      # truth; the host is the compose service name `db`.
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      EMBED_PROVIDER: ${EMBED_PROVIDER:-api}
+      EMBED_MODEL: ${EMBED_MODEL:-openai/text-embedding-3-small}
+      EMBED_DIM: ${EMBED_DIM:-1536}
+      EMBED_TIMEOUT: ${EMBED_TIMEOUT:-60}
+      EMBED_RETRIES: ${EMBED_RETRIES:-4}
+      RERANK_MODEL: ${RERANK_MODEL:-cross-encoder/ms-marco-MiniLM-L-6-v2}
+      RERANK_THRESHOLD: ${RERANK_THRESHOLD:-0.0}
+      # Generation: hosted OpenAI-compatible provider set in the server's .env.
+      OPENAI_BASE_URL: ${OPENAI_BASE_URL}
+      GEN_MODEL: ${GEN_MODEL}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      GEN_TIMEOUT: ${GEN_TIMEOUT:-60}
+      # Production hygiene: rate limit on, CORS restricted to the deployed origin.
+      RATE_LIMIT_PER_MIN: ${RATE_LIMIT_PER_MIN:-30}
+      CORS_ORIGINS: ${CORS_ORIGINS}
+      # LoL is the live face; the FastAPI corpus stays in-repo but is hidden from
+      # /corpora and the UI. Default holds even if the server .env omits it.
+      EXCLUDED_CORPORA: ${EXCLUDED_CORPORA:-smoke,fastapi}
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 8s
+      retries: 5
+      start_period: 90s
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+      args:
+        VITE_API_BASE: /api
+    restart: unless-stopped
+    depends_on:
+      - api
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      - api
+      - frontend
+    environment:
+      DOMAIN: ${DOMAIN}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  pgdata:
+  caddy_data:
+  caddy_config:

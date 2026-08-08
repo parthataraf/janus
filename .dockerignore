@@ -1,0 +1,34 @@
+# Keep the build context small and — critically — keep secrets out of it. The
+# real .env must never enter an image layer; generation credentials and the DB
+# password arrive only as runtime environment (docker-compose.deploy.yml).
+.env
+**/.env
+*.env
+!.env.example
+!.env.deploy.example
+
+.git
+.gitignore
+.dockerignore
+
+# Python
+__pycache__/
+**/__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+
+# Node / frontend build artifacts (npm ci rebuilds them in the image)
+frontend/node_modules/
+frontend/dist/
+
+# Repo material not needed inside any image
+design/
+eval/results.md
+tests/
+docker-compose.yml
+docker-compose.deploy.yml
+Dockerfile.api
+Dockerfile.frontend
+*.md
