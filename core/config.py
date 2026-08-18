@@ -69,6 +69,19 @@ OPENAI_BASE_URL: str = os.environ.get("OPENAI_BASE_URL", "https://api.openai.com
 # generous. Applied to the OpenAI client so a stalled local server fails with a
 # clean timeout instead of hanging the request forever.
 GEN_TIMEOUT: float = float(os.environ.get("GEN_TIMEOUT", "60"))
+# Ceiling on generated tokens per answer. OpenRouter injects no default when the
+# parameter is omitted (it passes the omission upstream), so without this an
+# answer is bounded only by the model's context window, on a public endpoint
+# backed by a paid key.
+#
+# Set well above measured need rather than close to it. Real answers from the
+# deployed demo run 52-216 tokens, the longest being a live-stats build query, so
+# this is roughly 19x the observed worst case. The asymmetry justifies the
+# generosity: a ceiling caps output rather than reserving it, so unused headroom
+# costs nothing, while one set too near typical length silently truncates long
+# item lists and regresses the exhaustive-enumeration result in eval/results.md
+# (100% answer-recall on item sets). Hitting it logs generation_truncated.
+GEN_MAX_TOKENS: int = int(os.environ.get("GEN_MAX_TOKENS", "4096"))
 RERANK_MODEL: str = os.environ.get(
     "RERANK_MODEL", "cross-encoder/ms-marco-MiniLM-L-6-v2"
 )
@@ -89,6 +102,13 @@ CORS_ORIGINS: list[str] = [
 # Per-IP rate limit for /ask (requests per rolling minute). It's a public demo
 # with a paid generation key behind it, so cap it; tune per deployment.
 RATE_LIMIT_PER_MIN: int = int(os.environ.get("RATE_LIMIT_PER_MIN", "30"))
+# Longest accepted /ask question, in characters. The rate limit caps how OFTEN a
+# caller can spend money; this caps how MUCH any single call can spend, which the
+# rate limit cannot: the question is interpolated into the generation prompt
+# verbatim, so an unbounded field means an unbounded prompt bill. (EMBED_MAX_CHARS
+# clips the embedding input only, never the prompt.) Real questions are a line or
+# two; 500 is roomy for anything a human actually types.
+MAX_QUESTION_CHARS: int = int(os.environ.get("MAX_QUESTION_CHARS", "500"))
 # Corpora hidden from /corpora so they never reach the UI switcher. The product
 # is the League of Legends face; the FastAPI corpus is retained in-repo as
 # engineering history but not surfaced (product pivot, 2026-07-21). smoke_test.py
