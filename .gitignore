@@ -16,7 +16,7 @@ venv/
 .cache/
 sentence_transformers_cache/
 
-# Node / frontend (later phases)
+# Node / frontend
 node_modules/
 frontend/dist/
 

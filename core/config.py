@@ -26,7 +26,7 @@ def _require(name: str) -> str:
     return value
 
 
-# --- Phase 1 ---
+# --- Core: database + embeddings ---
 DATABASE_URL: str = _require("DATABASE_URL")
 # Where embeddings come from: "api" = any OpenAI-compatible /embeddings endpoint
 # (shares OPENAI_BASE_URL / OPENAI_API_KEY with generation); "local" =
@@ -55,9 +55,9 @@ EMBED_BATCH: int = int(os.environ.get("EMBED_BATCH", "64"))
 # pathological chunk beats failing an entire ingest.
 EMBED_MAX_CHARS: int = int(os.environ.get("EMBED_MAX_CHARS", "24000"))
 
-# --- Phase 2+ (declared here so all config lives in one file; unused until
-# the generation/retrieval phases import them). Not required at import time
-# because Phase 1 must run without an OpenAI key. ---
+# --- Generation (declared here so all config lives in one file). Not
+# required at import time, because ingestion and retrieval must run without
+# a generation key. ---
 OPENAI_API_KEY: str = os.environ.get("OPENAI_API_KEY", "")
 GEN_MODEL: str = os.environ.get("GEN_MODEL", "gpt-4o-mini")
 # Generation provider is any OpenAI-compatible endpoint: the OpenAI SDK takes a
@@ -91,9 +91,9 @@ RERANK_MODEL: str = os.environ.get(
 # relevant), so 0.0 is a sensible neutral cut. Tune from eval data later.
 RERANK_THRESHOLD: float = float(os.environ.get("RERANK_THRESHOLD", "0.0"))
 
-# --- Phase 3 (API serving layer) ---
+# --- API serving layer ---
 # CORS allowed origins, comma-separated. Default is the Vite dev server so the
-# Phase 3b frontend works out of the box; set to the deployed origin in prod.
+# local frontend works out of the box; set to the deployed origin in prod.
 CORS_ORIGINS: list[str] = [
     o.strip()
     for o in os.environ.get("CORS_ORIGINS", "http://localhost:5173").split(",")

@@ -1,4 +1,4 @@
-"""FastAPI app factory for the Janus serving layer (Phase 3a).
+"""FastAPI app factory for the Janus serving layer.
 
 - CORS configured from `config.CORS_ORIGINS`.
 - Heavy models (embedder + cross-encoder) are warmed ONCE at startup via the
@@ -74,7 +74,7 @@ async def lifespan(app: FastAPI):
 
 
 def create_app() -> FastAPI:
-    app = FastAPI(title="Janus API", version="3a", lifespan=lifespan)
+    app = FastAPI(title="Janus API", version="1.0", lifespan=lifespan)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=config.CORS_ORIGINS,

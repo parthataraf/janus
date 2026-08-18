@@ -230,7 +230,7 @@ def generate(question: str, chunks: list[Any]) -> dict:
 
 
 def generate_stream(question: str, chunks: list[Any]) -> Iterator[str]:
-    """Yield the answer token-by-token (for the Phase 3 SSE endpoint). On a
+    """Yield the answer token-by-token (for the SSE endpoint). On a
     refusal, yields the refusal text once and stops — still no LLM call."""
     if _should_refuse(chunks):
         yield REFUSAL_TEXT

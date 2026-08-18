@@ -1,5 +1,5 @@
-# Dev datastore only. Phase 3 introduces docker-compose.deploy.yml which
-# overlays the api + frontend + reverse-proxy on top of this db service.
+# Dev datastore only. docker-compose.deploy.yml overlays the api + frontend +
+# reverse-proxy on top of this db service for a real deployment.
 services:
   db:
     image: pgvector/pgvector:pg16

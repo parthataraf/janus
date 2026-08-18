@@ -1,4 +1,4 @@
-"""Behavior eval for the live OP.GG stats path (Phase 4h). Live numbers are
+"""Behavior eval for the live OP.GG stats path. Live numbers are
 patch-volatile, so we score BEHAVIOR, not pinned values:
   - routed to the expected live path (or, for off-corpus, NOT routed live)
   - the MCP was actually called (mcp_ms > 0)

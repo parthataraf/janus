@@ -1,4 +1,4 @@
-"""HTTP routes for the Janus API (Phase 3a).
+"""HTTP routes for the Janus API.
 
   POST /ask     -> SSE: `sources` event first, then `token` events, then `done`
                   (or `sources` then `refusal` when the context is too weak).

@@ -9,20 +9,20 @@
 # numpy, pydantic) still float within their parents' ranges. torch is pinned
 # separately in Dockerfile.api because it is installed from the CPU-only index.
 
-# Phase 1 (retrieval core + smoke test)
+# Retrieval core + smoke test
 python-dotenv==1.0.0
 psycopg[binary]==3.3.4
 sentence-transformers==5.6.0   # cross-encoder reranker
 
-# Phase 2 generation / Phase 3 API
+# Generation + API
 openai==1.109.1                # OpenRouter-compatible client (generation + embeddings)
 fastapi==0.139.0
 uvicorn[standard]==0.51.0
 
-# Phase 4 LoL ingestion: Data Dragon fetches (also an openai dep)
+# LoL ingestion: Data Dragon fetches (also an openai dep)
 httpx==0.28.1
 
-# Phase 4h live stats: OP.GG official MCP client (live matchup/win-rate path).
+# Live stats: OP.GG official MCP client (live matchup/win-rate path).
 # HARD PIN — do not relax to >=. mcp 2.x is a breaking major: the two symbols
 # core/opgg_live.py imports were both renamed with no back-compat alias, and it
 # depends on httpx2, a different HTTP stack from the one openai uses. Moving to

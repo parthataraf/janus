@@ -1,4 +1,4 @@
-"""Phase 2e retrieval evaluation.
+"""Retrieval evaluation.
 
 Measures, per retrieval configuration, hit@k / MRR over a hand-curated test set,
 plus faithfulness (LLM-as-judge, 1-5) on the best config's generated answers.
@@ -194,13 +194,13 @@ def run_fastapi_eval() -> int:
     log(f"RERANK_THRESHOLD={config.RERANK_THRESHOLD}  CODE_MARGIN={CODE_MARGIN}  "
         f"top_n(gen)={TOP_N_GEN}\n")
 
-    # -- Phase 1: retrieval metrics over in-corpus questions -----------------
+    # -- Step 1: retrieval metrics over in-corpus questions ------------------
     # per_config accumulates hits/rr; stored_rankings caches rankings for reuse.
     per_config = {c: {"hits": {k: [] for k in K_LEVELS}, "rr": []} for c in RETRIEVAL_CONFIGS}
     worst = {c: [] for c in RETRIEVAL_CONFIGS}  # (rr, first_rank, question, expected, top1)
     stored = []  # [(row, rankings)]
 
-    log("=== Phase 1/3: retrieval metrics (in-corpus) ===")
+    log("=== Step 1/3: retrieval metrics (in-corpus) ===")
     for n, r in enumerate(in_corpus, start=1):
         q, exp = r["question"], r["expected_urls"]
         rankings = rankings_for(q)
@@ -214,8 +214,8 @@ def run_fastapi_eval() -> int:
             worst[c].append((rr, fr, q, exp, top1))
         log(f"  [{n:>2}/{len(in_corpus)}] {q[:64]}")
 
-    # -- Phase 2: off-corpus refusal (reranked configs) ----------------------
-    log("\n=== Phase 2/3: off-corpus refusal ===")
+    # -- Step 2: off-corpus refusal (reranked configs) -----------------------
+    log("\n=== Step 2/3: off-corpus refusal ===")
     off_results = {c: [] for c in RERANKED_CONFIGS}  # (question, top_score, refused)
     for n, r in enumerate(off_corpus, start=1):
         q = r["question"]
@@ -239,8 +239,8 @@ def run_fastapi_eval() -> int:
     log(f"\nBest config by hit@5 (tie-break MRR): {best}  "
         f"(hit@5={summary[best]['hit'][5]:.3f}, MRR={summary[best]['mrr']:.3f})")
 
-    # -- Phase 3: generation + faithfulness on the best config ---------------
-    log(f"\n=== Phase 3/3: generation + faithfulness judge on '{best}' "
+    # -- Step 3: generation + faithfulness on the best config ----------------
+    log(f"\n=== Step 3/3: generation + faithfulness judge on '{best}' "
         f"(this is the slow LAN part) ===")
     judge_template = JUDGE_PROMPT_FILE.read_text(encoding="utf-8")
     faith_scores = []
@@ -284,7 +284,7 @@ def write_results(summary, best, off_results, worst, faith_scores, faith_detail,
 
     L = []
     A = L.append
-    A("# Phase 2e — retrieval evaluation results\n")
+    A("# Retrieval evaluation results\n")
     A(f"- **Date:** {date.today().isoformat()}")
     A(f"- **Corpus:** `{CORPUS}` @ `{DOC_VERSION}`  ·  **in-corpus questions:** "
       f"{n_in}  ·  **off-corpus:** {n_off}")

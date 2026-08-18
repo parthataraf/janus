@@ -151,7 +151,7 @@ uvicorn app.main:app --port 8000
 cd frontend && npm install && npm run dev               # http://localhost:5173
 ```
 
-`python smoke_test.py` runs the Phase-1 embed → store → search check (prints
+`python smoke_test.py` runs the embed → store → search check (prints
 `SMOKE TEST PASSED`); `python -m pytest` runs the unit tests.
 
 ## Deploy
@@ -347,4 +347,4 @@ Full table, faithfulness, and per-config error analysis: [`eval/results.md`](eva
 | `frontend/` | Vite + React UI: streamed answer, citations panel, corpus/version switcher |
 | `eval/` | `evaluate.py`, versioned test sets, `results.md`, the judge prompt |
 | `deploy/` | `Caddyfile` (Dockerfiles + `docker-compose.deploy.yml` at the root) |
-| `smoke_test.py` | Phase-1 end-to-end check |
+| `smoke_test.py` | End-to-end embed → store → search check |

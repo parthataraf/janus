@@ -1,4 +1,4 @@
-"""League of Legends Data Dragon ingestion (Phase 4a).
+"""League of Legends Data Dragon ingestion.
 
 Data Dragon is Riot's official static-data CDN — versioned per patch, free to
 use. We fetch a pinned patch and write TWO ways, mirroring the fastapi face's
@@ -6,7 +6,7 @@ prose path but adding a structured one:
 
   1. Structured tables (`lol_champions`, `lol_abilities`, `lol_items` in
      core.store) — the NUMERIC source of truth: per-rank cooldowns/costs, item
-     gold and stats. Phase 4b's routing reads these for exact-number questions.
+     gold and stats. The router reads these for exact-number questions.
   2. Prose chunks (corpus 'lol', doc_version = patch) — champion ability /
      passive / item / rune / summoner-spell descriptions with Data Dragon's
      HTML-ish markup stripped, embedded like any other corpus so conceptual

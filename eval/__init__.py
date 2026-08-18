@@ -1,1 +1,1 @@
-"""Retrieval evaluation harness (Phase 2e)."""
+"""Retrieval evaluation harness."""

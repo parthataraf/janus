@@ -1,7 +1,7 @@
 """Manual QA helper: retrieve + generate for one question from the CLI.
 
-Not part of the eval harness (Phase 2e) — just a way to exercise the 2c/2d
-pipeline by hand and eyeball grounding, citations, and the refusal path.
+Not part of the eval harness — just a way to exercise the retrieval and
+generation path by hand and eyeball grounding, citations, and refusals.
 
     python ask.py "What does Yasuo's passive do?"
     python ask.py --corpus fastapi "What is a WebSocket in FastAPI?"
