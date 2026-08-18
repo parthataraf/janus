@@ -128,7 +128,7 @@ def _rrf_merge(
 
 
 # Release-notes pages are changelog entries — API-name-dense but low in
-# explanatory value. The Phase 2e eval showed that filtering them out of the
+# explanatory value. The retrieval eval showed that filtering them out of the
 # candidate pool at query time lifts hit@1 by +7.8 pts and MRR by +0.040 with no
 # metric degraded, so it is the default. Pass exclude_url_substr=None to search
 # the raw corpus (e.g. for evaluation baselines). See eval/results.md.

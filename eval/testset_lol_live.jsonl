@@ -1,4 +1,4 @@
-# testset_lol_live.jsonl — behavior-scored live-stats (OP.GG) questions (Phase 4h).
+# testset_lol_live.jsonl — behavior-scored live-stats (OP.GG) questions.
 # These are NOT value-pinned: live numbers change per patch. Each is scored on
 # BEHAVIOR — routed to the live path, MCP called, attribution + timestamp present,
 # numbers present, hedging respected — plus one off-corpus that must still refuse

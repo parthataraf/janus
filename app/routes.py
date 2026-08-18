@@ -1,4 +1,4 @@
-"""HTTP routes for the Janus API (Phase 3a).
+"""HTTP routes for the Janus API.
 
   POST /ask     -> SSE: `sources` event first, then `token` events, then `done`
                   (or `sources` then `refusal` when the context is too weak).
@@ -30,7 +30,7 @@ from core import config, followup, generation, retrieval, store
 from core.embeddings import EmbeddingUnavailable
 
 router = APIRouter()
-logger = logging.getLogger("docpilot")
+logger = logging.getLogger("janus")
 
 # Chunks sent to generation / shown as sources. Matches retrieve()'s top_n=5.
 TOP_N = 5

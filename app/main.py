@@ -1,10 +1,10 @@
-"""FastAPI app factory for the Janus serving layer (Phase 3a).
+"""FastAPI app factory for the Janus serving layer.
 
 - CORS configured from `config.CORS_ORIGINS`.
 - Heavy models (embedder + cross-encoder) are warmed ONCE at startup via the
   lifespan hook, so the first request isn't slow and every request reuses the
   process-wide singletons — never a per-request load.
-- Request logging is emitted as JSON lines on stdout by the `docpilot` logger.
+- Request logging is emitted as JSON lines on stdout by the `janus` logger.
 
 Run: `uvicorn app.main:app --host 0.0.0.0 --port 8000`
 """
@@ -23,7 +23,7 @@ from app.routes import router
 from core import config
 
 # Dedicated JSON-lines logger to stdout, independent of uvicorn's own config.
-logger = logging.getLogger("docpilot")
+logger = logging.getLogger("janus")
 if not logger.handlers:
     _handler = logging.StreamHandler(sys.stdout)
     _handler.setFormatter(logging.Formatter("%(message)s"))
@@ -74,7 +74,7 @@ async def lifespan(app: FastAPI):
 
 
 def create_app() -> FastAPI:
-    app = FastAPI(title="Janus API", version="3a", lifespan=lifespan)
+    app = FastAPI(title="Janus API", version="1.0", lifespan=lifespan)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=config.CORS_ORIGINS,

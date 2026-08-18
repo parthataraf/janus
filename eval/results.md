@@ -1,4 +1,4 @@
-# Phase 2e — retrieval evaluation results
+# Retrieval evaluation results
 
 - **Date:** 2026-07-18
 - **Corpus:** `fastapi` @ `0.139.0`  ·  **in-corpus questions:** 51  ·  **off-corpus:** 3
@@ -282,7 +282,7 @@ The eyeball test is already informative: MiniLM ranks *Header Parameters* and
 | bge-m3 | 1024 | 82.4% | 92.2% | 94.1% | 0.871 |
 
 *Baseline sanity: MiniLM reproduces **72.5% / 0.815** vector-only and **76.5% /
-0.845** with exclusion — matching both the Phase-2e baseline (72.5% / 0.814) and
+0.845** with exclusion — matching both the 2026-07-18 baseline (72.5% / 0.814) and
 the retracted run's arm A exactly. Only the API arm moved, which is what isolates
 the defect to the input text.*
 
@@ -517,14 +517,14 @@ No default was changed. 51 in-corpus FastAPI questions.
 | full pipeline | + release-notes excl | **80.4%** | 94.1% | 96.1% | **0.876** |
 | full pipeline | **delta** | **+7.8** | +0.0 | +0.0 | **+0.039** |
 
-**It still earns its place — but for a different reason than in Phase 2e.** On
+**It still earns its place — but for a different reason than in the 2026-07-18 run.** On
 the **dense leg it is now worth exactly nothing** (+0.0 / +0.000): 3-small never
 puts a release-notes page at rank 1, so there is nothing left to filter. The
 **+7.8 pts hit@1** it still delivers end-to-end comes from the **keyword leg**,
 which continues to surface API-name-dense changelog pages that RRF then fuses
 into the pool. The rule was originally justified as a fix for dense retrieval;
 it is now, in effect, a keyword-leg filter. Kept as the default (the end-to-end
-gain is unchanged at +7.8 pts, coincidentally identical to the Phase-2e figure),
+gain is unchanged at +7.8 pts, coincidentally identical to the 2026-07-18 figure),
 but the *rationale* in any future write-up should say keyword, not dense.
 
 

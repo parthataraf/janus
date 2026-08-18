@@ -73,9 +73,10 @@ def init_schema() -> None:
             """
         )
 
-        # GIN index over the full-text vector of `content`. Unused in Phase 1
-        # but created now so Phase 2's keyword_search (plainto_tsquery/ts_rank)
-        # is fast the moment it lands. Expression must match the query exactly.
+        # GIN index over the full-text vector of `content`. Unused by the vector
+        # path, but created up front so keyword_search (plainto_tsquery/ts_rank)
+        # is fast the moment hybrid retrieval needs it. Expression must match
+        # the query exactly.
         cur.execute(
             """
             CREATE INDEX IF NOT EXISTS chunks_content_fts
@@ -328,11 +329,11 @@ def list_corpora() -> list[dict]:
 
 
 # --------------------------------------------------------------------------- #
-# LoL structured tables (Phase 4a)
+# LoL structured tables
 #
 # The `chunks` table above holds the embedded PROSE for every corpus (fastapi,
 # lol, ...). These extra tables hold the LoL face's NUMERIC source of truth —
-# ability cooldowns/costs, item gold/stats — so Phase 4b's routing can answer
+# ability cooldowns/costs, item gold/stats — so the router can answer
 # "cooldown of Yasuo's Q at rank 3" from exact numbers, not from prose. JSONB
 # holds ragged/per-rank arrays. Keyed by (id, patch) so a patch is idempotent.
 # --------------------------------------------------------------------------- #
@@ -455,7 +456,7 @@ def insert_lol_items(rows: Iterable[dict]) -> int:
     return len(params)
 
 
-# --- LoL structured reads (Phase 4b routing) ------------------------------- #
+# --- LoL structured reads (routing) ---------------------------------------- #
 def lol_patches() -> list[str]:
     """Patches present in the LoL structured tables, oldest→newest-ish."""
     with _connect() as conn, conn.cursor() as cur:

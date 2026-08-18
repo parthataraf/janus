@@ -1,4 +1,4 @@
-"""Unit tests for LoL entity linking + routing signals (Phase 4b).
+"""Unit tests for LoL entity linking + routing signals.
 
 These cover the pure helpers only — no DB. The DB-backed structured lookups are
 covered by the integration verification.
@@ -232,7 +232,7 @@ def test_live_build_does_not_fire_on_mechanics_questions():
         assert live_stats_intent(q, _ents(YAS)) is None, q
 
 
-# --- live-stats (OP.GG) intent detection (Phase 4h) --- #
+# --- live-stats (OP.GG) intent detection --- #
 def test_live_matchup_two_champions():
     r = live_stats_intent("Yasuo vs Zed matchup", _ents(YAS, ZED))
     assert r and r["kind"] == "matchup" and r["a"] == YAS and r["b"] == ZED
@@ -260,7 +260,7 @@ def test_live_intent_guards_existing_questions():
     assert live_stats_intent("How much gold does Infinity Edge cost?", _ents()) is None
 
 
-# --- hardening: gamer spellings, possessives, matchup direction (Phase 4h) --- #
+# --- hardening: gamer spellings, possessives, matchup direction --- #
 MYI = ("MasterYi", "Master Yi")
 REN = ("Renekton", "Renekton")
 

@@ -1,1 +1,1 @@
-"""FastAPI application (Phase 3)."""
+"""FastAPI application."""

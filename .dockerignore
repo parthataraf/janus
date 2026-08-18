@@ -27,6 +27,9 @@ frontend/dist/
 design/
 eval/results.md
 tests/
+conftest.py
+requirements-dev.txt
+.github/
 docker-compose.yml
 docker-compose.deploy.yml
 Dockerfile.api

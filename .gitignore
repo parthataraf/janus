@@ -16,7 +16,7 @@ venv/
 .cache/
 sentence_transformers_cache/
 
-# Node / frontend (later phases)
+# Node / frontend
 node_modules/
 frontend/dist/
 
@@ -25,6 +25,10 @@ frontend/dist/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Local-only working notes (planning docs, scratch). Deliberately never
+# published: this is where working material lives that isn't part of the repo.
+/LocalDocs/
 
 # FastAPI docs are cloned to an OS temp dir during ingestion (tempfile) and
 # auto-deleted — never in-repo. Defensive: ignore any local checkout/data if

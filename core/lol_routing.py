@@ -1,4 +1,4 @@
-"""LoL entity linking + structured/prose routing (Phase 4b).
+"""LoL entity linking + structured/prose routing.
 
 The LoL face has two kinds of question:
   - "What does Yasuo's passive do?" — mechanics prose. Answered by the SAME
@@ -12,8 +12,8 @@ passage dicts); `retrieval.route()` wraps them as Candidates and merges them wit
 prose retrieval, so a single generation call can see both. The pure helpers
 (`link_entities`, `detect_slot`, `detect_rank`, `has_numeric_intent`) take their
 inputs directly and are unit-tested without a DB. The entity index is built from
-the DB and cached per patch; `link_entities` itself is corpus-agnostic (Phase 4e
-can feed it a Palworld index).
+the DB and cached per patch; `link_entities` itself is corpus-agnostic (a second
+face can feed it a Palworld index).
 """
 
 from __future__ import annotations
@@ -26,7 +26,7 @@ from functools import lru_cache
 from core import followup, lol_aliases, store
 from core.lol_roster import canonicality, norm_name, select_canonical
 
-logger = logging.getLogger("docpilot")
+logger = logging.getLogger("janus")
 
 # Data Dragon base (for building human-checkable source_urls on structured hits).
 _DDRAGON = "https://ddragon.leagueoflegends.com/cdn/{patch}/data/en_US/champion/{cid}.json"
@@ -169,7 +169,7 @@ def decide_branch(query: str, ents: dict, slot: str | None) -> str | None:
     return None
 
 
-# --- Live-stats (OP.GG meta questions) intent detection (Phase 4h) ---------- #
+# --- Live-stats (OP.GG meta questions) intent detection -------------------- #
 # These route to the LIVE OP.GG path (win rates / counters / popularity), which
 # is answered by a live per-question MCP call, never from our tables. Kept as a
 # pure classifier so it's unit-tested without a DB or network.

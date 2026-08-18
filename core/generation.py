@@ -14,10 +14,15 @@ dict works, so this module doesn't import retrieval.
 
 from __future__ import annotations
 
+import json
+import logging
 import re
 from typing import Any, Iterator
 
 from core import config
+
+# Same JSON-lines logger the API and the other core modules write to.
+logger = logging.getLogger("janus")
 
 REFUSAL_TEXT = (
     "I couldn't find this in the available sources, so I won't guess."
@@ -154,6 +159,19 @@ def _extract_citations(answer: str, chunks: list[Any]) -> list[dict]:
     return citations
 
 
+def _warn_truncated() -> None:
+    """Record that an answer stopped because it hit GEN_MAX_TOKENS.
+
+    Worth a log line rather than silence: a truncated answer loses its closing
+    sentences and any citations they carried, which looks like a model or
+    retrieval fault. This names the real cause, and a burst of these is the
+    signal to raise the ceiling.
+    """
+    logger.warning(
+        json.dumps({"event": "generation_truncated", "max_tokens": config.GEN_MAX_TOKENS})
+    )
+
+
 def _should_refuse(chunks: list[Any]) -> bool:
     """Refuse when there's nothing to ground on, or the best passage scores
     below the relevance threshold."""
@@ -197,8 +215,12 @@ def generate(question: str, chunks: list[Any]) -> dict:
         model=config.GEN_MODEL,
         messages=build_prompt(question, chunks),
         temperature=0,  # deterministic, grounded answers over creative ones
+        max_tokens=config.GEN_MAX_TOKENS,
     )
-    answer = resp.choices[0].message.content or ""
+    choice = resp.choices[0]
+    if getattr(choice, "finish_reason", None) == "length":
+        _warn_truncated()
+    answer = choice.message.content or ""
     return {
         "answer": answer,
         "citations": _extract_citations(answer, chunks),
@@ -208,7 +230,7 @@ def generate(question: str, chunks: list[Any]) -> dict:
 
 
 def generate_stream(question: str, chunks: list[Any]) -> Iterator[str]:
-    """Yield the answer token-by-token (for the Phase 3 SSE endpoint). On a
+    """Yield the answer token-by-token (for the SSE endpoint). On a
     refusal, yields the refusal text once and stops — still no LLM call."""
     if _should_refuse(chunks):
         yield REFUSAL_TEXT
@@ -218,9 +240,17 @@ def generate_stream(question: str, chunks: list[Any]) -> Iterator[str]:
         model=config.GEN_MODEL,
         messages=build_prompt(question, chunks),
         temperature=0,
+        max_tokens=config.GEN_MAX_TOKENS,
         stream=True,
     )
     for event in stream:
-        delta = event.choices[0].delta.content
+        choice = event.choices[0]
+        delta = choice.delta.content
         if delta:
             yield delta
+        # The SSE path is what the deployed demo uses, so this is where a ceiling
+        # that is set too low would actually bite. Truncation is otherwise
+        # invisible: the stream simply stops, and a half-finished answer reads as
+        # a model quality problem rather than a configured limit.
+        if getattr(choice, "finish_reason", None) == "length":
+            _warn_truncated()

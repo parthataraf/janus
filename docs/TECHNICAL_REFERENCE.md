@@ -3,7 +3,7 @@
 A component-by-component explanation of the system. Written for the owner;
 suitable for the repo as internal documentation and as interview
 preparation. State reflects the project as of the GAMING PIVOT during
-Phase 4c: Janus is now a gaming knowledge engine — League of Legends is
+Janus is now a gaming knowledge engine — League of Legends is
 the primary (and currently only) live face, Palworld is the coming-soon
 second face, and the FastAPI docs face is RETIRED FROM THE PRODUCT but
 retained in-repo as engineering history and the regression harness.
@@ -241,7 +241,7 @@ support that is deferred, not forgotten.
   stat-phrase branch no longer hijacks champion-named base-stat
   questions).
 
-### 5.7 Live stats path — OP.GG MCP (Phase 4h)
+### 5.7 Live stats path — OP.GG MCP
 Meta questions — matchups/counters ("who counters Yasuo?"), win-rate /
 popularity / tier ("Jinx win rate", "is Zed strong right now"),
 beginner-suitability — are answered from LIVE OP.GG data, not our corpus.
@@ -437,7 +437,7 @@ keep common/demo champions fast.
 
 ---
 
-## 10. Packaging & deploy (Phase 3c artifacts)
+## 10. Packaging & deploy
 
 - Dockerfile.api: python-slim, non-root, CPU torch, **reranker** baked at
   build (no cold-start download), baked before code copy so code edits
@@ -502,7 +502,7 @@ keep common/demo champions fast.
 
 ## 13. Pivot record & open items (as of this revision)
 
-**The gaming pivot (decided during Phase 4c):** Janus repositioned from
+**The gaming pivot:** Janus repositioned from
 "docs + game demo" to a gaming knowledge engine. FastAPI face retired
 from the product via config (EXCLUDED_CORPORA), preserved in-repo as
 regression harness and engineering history; README reframed with the
@@ -637,7 +637,7 @@ instead of quietly degrading retrieval.
   same guard the keyword router does — 0/32 pinned questions routed live, now
   also with a conversation frame present — and its latency has to fit inside a
   path that already spends ~800 ms embedding and up to ~16 s on OP.GG.
-- **Phase 1 SHIPPED (2026-07-31): conversational carryover.** Follow-ups that
+- **SHIPPED (2026-07-31): conversational carryover.** Follow-ups that
   named no champion ("what about some more champs he's good against") linked no
   entity and refused. A resolved frame from the previous ANSWERED turn — champion,
   lane, kind, and the champions that answer named — is minted server-side,
@@ -683,7 +683,7 @@ instead of quietly degrading retrieval.
   `gemini-2.5-flash` is the stable same-family substitute.)* Historical
   FastAPI runs stay labeled with their original phi-4 self-judge
   provenance; they are not retro-rescored.
-- **Phase 4h SHIPPED (2026-07-25): live OP.GG meta stats** (matchups /
+- **SHIPPED (2026-07-25): live OP.GG meta stats** (matchups /
   win-rate / popularity) via the sanctioned OP.GG MCP, live-queried and
   never cached (§5.7). This supersedes the earlier "matchup data" idea
   below — done as a live third-party path, not a cached structured table.

@@ -1,9 +1,9 @@
 """Manual QA helper: retrieve + generate for one question from the CLI.
 
-Not part of the eval harness (Phase 2e) — just a way to exercise the 2c/2d
-pipeline by hand and eyeball grounding, citations, and the refusal path.
+Not part of the eval harness — just a way to exercise the retrieval and
+generation path by hand and eyeball grounding, citations, and refusals.
 
-    python ask.py "How do I declare query parameters?"
+    python ask.py "What does Yasuo's passive do?"
     python ask.py --corpus fastapi "What is a WebSocket in FastAPI?"
 """
 
@@ -17,7 +17,10 @@ from core import generation, retrieval
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("question", nargs="+")
-    parser.add_argument("--corpus", default="fastapi")
+    # Defaults to the shipped face. The fastapi corpus is retained in-repo as
+    # engineering history and still works when named explicitly.
+    parser.add_argument("--corpus", default="lol",
+                        help="corpus to search (default: lol)")
     parser.add_argument("--version", default=None)
     args = parser.parse_args()
     question = " ".join(args.question)

@@ -1,11 +1,11 @@
-"""Phase 1 smoke test: end-to-end proof that embed -> store -> search works.
+"""Smoke test: end-to-end proof that embed -> store -> search works.
 
 Seeds five FastAPI-concept chunks plus two unrelated sentences, then searches
 for "how do I use query parameters?" and asserts:
   1. the query-parameters chunk ranks #1, and
   2. both unrelated sentences score below 0.3 (they must not look relevant).
 
-This grows into the Phase 2 integration test. Run against the dockerized DB:
+Run against the dockerized DB:
     docker compose up -d
     python smoke_test.py
 Prints "SMOKE TEST PASSED" and exits 0 on success; raises and exits non-zero

@@ -1,0 +1,49 @@
+# Unit suite on every push and pull request.
+#
+# Installs requirements-dev.txt, not requirements.txt: the latter pulls
+# sentence-transformers and therefore torch (the CUDA build, on the default
+# index), which the unit tests never import. See requirements-dev.txt for the
+# full reasoning; tests/test_requirements_consistency.py stops the two files
+# from drifting apart.
+#
+# No DATABASE_URL is set here on purpose. The root conftest.py supplies a
+# placeholder, so a green run is also proof that a fresh clone needs no setup.
+
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  unit:
+    name: unit tests (python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # The floor is what README.md advertises ("Python 3.11+"); the ceiling is
+        # what the project is developed on. Testing both keeps that claim honest.
+        python-version: ["3.11", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: requirements-dev.txt
+
+      - name: Install test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Run unit tests
+        run: python -m pytest -q
