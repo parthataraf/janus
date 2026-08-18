@@ -1,0 +1,20 @@
+# Test-only dependency set: exactly what `python -m pytest` needs, nothing more.
+#
+# Deliberately NOT `-r requirements.txt`. That file pulls sentence-transformers,
+# and therefore torch, which on the default index is the multi-GB CUDA build (see
+# the workaround at Dockerfile.api:35). The unit suite never imports it: the
+# reranker and the local embedder are imported lazily inside functions
+# (core/retrieval.py:180, core/embeddings.py:60), so no test loads torch. Running
+# CI on this subset turns a multi-minute install into a few seconds.
+#
+# Pins MUST match requirements.txt exactly. tests/test_requirements_consistency.py
+# enforces that, so this file cannot silently drift from the real one. Bump both
+# together, or the suite fails.
+
+python-dotenv==1.0.0
+psycopg[binary]==3.3.4
+openai==1.109.1
+fastapi==0.139.0
+httpx==0.28.1
+mcp==1.28.1
+pytest==9.1.1
