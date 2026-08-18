@@ -361,7 +361,7 @@ def test_healthy_payload_never_resets_the_session(monkeypatch):
 def test_empty_payload_is_logged_with_the_raw_body(monkeypatch, caplog):
     monkeypatch.setattr(opgg_live._mgr, "call_tool", lambda n, a: EMPTY_RAW)
     monkeypatch.setattr(opgg_live._mgr, "reset", lambda: False)  # reset unavailable
-    with caplog.at_level("WARNING", logger="docpilot"):
+    with caplog.at_level("WARNING", logger="janus"):
         opgg_live.analyze("Garen", "Garen", "stats")
     logged = " ".join(r.message for r in caplog.records)
     assert "opgg_empty_payload" in logged

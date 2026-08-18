@@ -36,7 +36,7 @@ import time
 
 from core import config
 
-logger = logging.getLogger("docpilot")
+logger = logging.getLogger("janus")
 
 
 class EmbeddingUnavailable(RuntimeError):

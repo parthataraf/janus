@@ -3,7 +3,7 @@
 services:
   db:
     image: pgvector/pgvector:pg16
-    container_name: docpilot_db
+    container_name: janus_db
     environment:
       POSTGRES_USER: rag
       POSTGRES_PASSWORD: ragpass
@@ -13,7 +13,7 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      - docpilot_pgdata:/var/lib/postgresql/data
+      - janus_pgdata:/var/lib/postgresql/data
     # Let dependent tooling wait until Postgres is actually accepting queries,
     # not just until the container is up.
     healthcheck:
@@ -23,4 +23,4 @@ services:
       retries: 10
 
 volumes:
-  docpilot_pgdata:
+  janus_pgdata:

@@ -108,7 +108,7 @@ def test_max_tokens_leaves_room_for_the_longest_eval_answer():
 def test_truncated_answer_is_logged(monkeypatch, caplog):
     monkeypatch.setattr(generation, "_get_client",
                         lambda: _RecordingClient(finish_reason="length"))
-    with caplog.at_level("WARNING", logger="docpilot"):
+    with caplog.at_level("WARNING", logger="janus"):
         generation.generate("q", CHUNKS)
     events = [json.loads(r.message)["event"] for r in caplog.records]
     assert "generation_truncated" in events
@@ -117,7 +117,7 @@ def test_truncated_answer_is_logged(monkeypatch, caplog):
 def test_truncated_stream_is_logged(monkeypatch, caplog):
     monkeypatch.setattr(generation, "_get_client",
                         lambda: _RecordingClient(finish_reason="length"))
-    with caplog.at_level("WARNING", logger="docpilot"):
+    with caplog.at_level("WARNING", logger="janus"):
         list(generation.generate_stream("q", CHUNKS))
     events = [json.loads(r.message)["event"] for r in caplog.records]
     assert "generation_truncated" in events
@@ -126,7 +126,7 @@ def test_truncated_stream_is_logged(monkeypatch, caplog):
 def test_normal_answer_logs_no_truncation(monkeypatch, caplog):
     monkeypatch.setattr(generation, "_get_client",
                         lambda: _RecordingClient(finish_reason="stop"))
-    with caplog.at_level("WARNING", logger="docpilot"):
+    with caplog.at_level("WARNING", logger="janus"):
         generation.generate("q", CHUNKS)
     assert not [r for r in caplog.records if "generation_truncated" in r.message]
 

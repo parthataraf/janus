@@ -1,4 +1,4 @@
-# DocPilot corpus spot-check
+# Janus corpus spot-check
 
 Manual review package for the `fastapi` corpus. Sampled from 1582 total chunks (441 contain a ```` ```python ```` block). 10 random + 5 random code-bearing chunks, drawn independently and de-duplicated.
 

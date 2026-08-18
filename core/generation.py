@@ -22,7 +22,7 @@ from typing import Any, Iterator
 from core import config
 
 # Same JSON-lines logger the API and the other core modules write to.
-logger = logging.getLogger("docpilot")
+logger = logging.getLogger("janus")
 
 REFUSAL_TEXT = (
     "I couldn't find this in the available sources, so I won't guess."

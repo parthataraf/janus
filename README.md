@@ -18,7 +18,7 @@ No LangChain / LlamaIndex; Postgres + pgvector is the only datastore.
 
 **▶ Live demo: [leagueoflegends.polaris-ai.org](https://leagueoflegends.polaris-ai.org)**
 &nbsp;·&nbsp; **[GitHub](https://github.com/parthataraf/janus)**
-&nbsp;·&nbsp; methodology: **[spec](DOCPILOT_FULL_SPEC.md)** · **[technical reference](docs/TECHNICAL_REFERENCE.md)**
+&nbsp;·&nbsp; methodology: **[spec](SPEC.md)** · **[technical reference](docs/TECHNICAL_REFERENCE.md)**
 
 ![Janus: a cited League of Legends answer with sources-first streaming](docs/assets/janus-lol.png)
 
@@ -118,9 +118,10 @@ Built **spec-first, one phase at a time, each behind a verification gate**, and
 release-notes filter became the default only after the eval showed +7.8 hit@1
 with no metric degraded. The evidence lives in the repo:
 
-- **[`DOCPILOT_FULL_SPEC.md`](DOCPILOT_FULL_SPEC.md)**: the full project specification.
+- **[`SPEC.md`](SPEC.md)**: the full project specification.
 - **[`docs/TECHNICAL_REFERENCE.md`](docs/TECHNICAL_REFERENCE.md)**: component-by-component reference for the post-pivot engine (incl. the golden-set maintenance policy, the retired-face policy, and open items).
 - **[`eval/results.md`](eval/results.md)**: the eval numbers and per-config error analysis.
+- **[`docs/EVAL_TUNABLES.md`](docs/EVAL_TUNABLES.md)**: per-tunable adopt/reject record behind the pipeline defaults (what was tried, what the eval said, what shipped).
 - **[`SPOT_CHECK.md`](SPOT_CHECK.md)**: the manual corpus-audit record (two review rounds).
 
 ## Run it locally

@@ -1,4 +1,4 @@
-# DocPilot — Full Project Specification
+# Janus: Full Project Specification
 
 A retrieval-augmented generation (RAG) platform with one shared core engine
 and two deployed corpus "faces":
@@ -43,7 +43,7 @@ numbers, (3) live deployed demo.
 ## Repository layout (final state)
 
 ```
-docpilot/
+janus/
   core/                      # domain-agnostic engine — knows nothing about
     __init__.py              # FastAPI-the-docs or LoL
     config.py                # env loading; all settings live here
@@ -56,7 +56,6 @@ docpilot/
     __init__.py
     fastapi_docs.py          # clone/parse FastAPI docs at a pinned version
     lol_datadragon.py        # fetch/normalize Data Dragon JSON at a pinned patch
-    lol_wiki.py              # (optional, phase 4) supplemental mechanics prose
     run_ingest.py            # CLI: python -m ingestion.run_ingest --corpus fastapi --version 0.115.0
   app/
     __init__.py
@@ -93,7 +92,7 @@ docpilot/
 ### Deliverables
 
 - Full repo skeleton above (later-phase files as TODO-docstring placeholders).
-- `docker-compose.yml`: `pgvector/pgvector:pg16`, container `docpilot_db`,
+- `docker-compose.yml`: `pgvector/pgvector:pg16`, container `janus_db`,
   user `rag` / password `ragpass` / db `ragdb`, port 5432, named volume.
 - `core/config.py`: loads `.env`; exposes `DATABASE_URL`, `EMBED_MODEL`,
   `EMBED_DIM` (int), later `OPENAI_API_KEY`, `GEN_MODEL`, `RERANK_MODEL`.

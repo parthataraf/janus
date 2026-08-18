@@ -26,7 +26,7 @@ from functools import lru_cache
 from core import followup, lol_aliases, store
 from core.lol_roster import canonicality, norm_name, select_canonical
 
-logger = logging.getLogger("docpilot")
+logger = logging.getLogger("janus")
 
 # Data Dragon base (for building human-checkable source_urls on structured hits).
 _DDRAGON = "https://ddragon.leagueoflegends.com/cdn/{patch}/data/en_US/champion/{cid}.json"

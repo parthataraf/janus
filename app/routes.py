@@ -30,7 +30,7 @@ from core import config, followup, generation, retrieval, store
 from core.embeddings import EmbeddingUnavailable
 
 router = APIRouter()
-logger = logging.getLogger("docpilot")
+logger = logging.getLogger("janus")
 
 # Chunks sent to generation / shown as sources. Matches retrieve()'s top_n=5.
 TOP_N = 5

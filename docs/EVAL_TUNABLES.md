@@ -1,4 +1,4 @@
-# Phase 2e eval — retrieval tunables (outcomes)
+# Retrieval tunables: eval outcomes
 
 The Phase 2e eval (2026-07-18) evaluated the three tunables below over the
 hand-curated 54-question test set (see `eval/results.md`). Outcomes are recorded

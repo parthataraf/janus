@@ -33,7 +33,7 @@ from datetime import datetime, timezone
 from mcp import ClientSession, McpError
 from mcp.client.streamable_http import streamablehttp_client
 
-logger = logging.getLogger("docpilot")
+logger = logging.getLogger("janus")
 
 MCP_URL = "https://mcp-api.op.gg/mcp"
 # Per-attempt MCP timeout. Owner approved 5s, but measured cold (server-side
